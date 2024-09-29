@@ -56,7 +56,9 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
     local charidentifier = Character.charIdentifier
     local Money = Character.money
     local price = Config.DocumentTypes[docType].price
-    local date, newExpiryDate = os.date('%Y-%m-%d %H:%M:%S')
+    local date = os.date('%Y-%m-%d %H:%M:%S')
+    -- Calcula 30 dias a partir da data atual (30 dias * 86400 segundos por dia)
+    local newExpiryDate = os.date('%Y-%m-%d %H:%M:%S', os.time() + (30 * 86400))
     local picture = Config.DocumentTypes[docType].defaultPicture
 
     devPrint("Creating document for user:", charidentifier, "docType:", docType)
@@ -72,7 +74,7 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
                         Character.identifier, charidentifier, docType,
                         Character.firstname, Character.lastname, Character.nickname,
                         Character.jobLabel, Character.age, Character.gender,
-                        date, picture, newExpiryDate
+                        date, picture, newExpiryDate -- Aqui está a nova data de expiração
                     }, function()
                         Character.removeCurrency(0, price)
                         VORPcore.NotifyLeft(src, _U('BoughtDocument') .. price .. '$', "", Config.Textures.tick[1], Config.Textures.tick[2], 5000)
@@ -87,6 +89,7 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
         end
     end)
 end)
+
 
 RegisterServerEvent('bcc-documents:server:reissueDocument')
 AddEventHandler('bcc-documents:server:reissueDocument', function(docType)

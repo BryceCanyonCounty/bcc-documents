@@ -35,7 +35,7 @@ Config = {
             reissuePrice = 20,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = 'https://i.ibb.co/2s29db7/idcard.png'
         },
         huntinglicence = {
             displayName = "Hunting Licence",
@@ -43,7 +43,7 @@ Config = {
             reissuePrice = 30,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = 'https://i.ibb.co/rkXmSPs/hunterlicence.png'
         },
         mininglicence = {
             displayName = "Mining Licence",
@@ -51,7 +51,7 @@ Config = {
             reissuePrice = 25,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = 'https://i.ibb.co/PYk5gCn/mininglicence.png'
         },
         lumberlicence = {
             displayName = "Lumber Licence",
@@ -59,7 +59,7 @@ Config = {
             reissuePrice = 20,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = 'https://i.ibb.co/6mvwkRw/lumberlicence.png'
         },
         goldpanninglicence = {
             displayName = "Gold Panning Licence",
@@ -67,7 +67,7 @@ Config = {
             reissuePrice = 15,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = 'https://i.ibb.co/HKMWGBX/goldpanninglicence.png'
         }
     },
     
