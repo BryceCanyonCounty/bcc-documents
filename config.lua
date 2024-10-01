@@ -1,6 +1,6 @@
 Config = {
     -- Language settings
-    defaultlang = "en_lang", -- Set Your Language (Current Languages: "en_lang" English, "ro_lang" Romanian)
+    defaultlang = "en_lang", -- Set Your Language (Current Languages: "en_lang" English, "ro_lang" Romanian, "de_lang" German)
     devMode = false,
     -- NPC and Blip settings
     DocumentBlips = true,
