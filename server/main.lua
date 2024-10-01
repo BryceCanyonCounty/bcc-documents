@@ -56,7 +56,8 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
     local charidentifier = Character.charIdentifier
     local Money = Character.money
     local price = Config.DocumentTypes[docType].price
-    local date, newExpiryDate = os.date('%Y-%m-%d %H:%M:%S')
+    local year = Config.PlayYear
+    local date, newExpiryDate = os.date(year..'-%m-%d %H:%M:%S')
     local picture = Config.DocumentTypes[docType].defaultPicture
 
     devPrint("Creating document for user:", charidentifier, "docType:", docType)
@@ -242,7 +243,8 @@ AddEventHandler('bcc-documents:server:updateExpiryDate', function(docType, daysT
         if result and result[1] then
             if Money >= totalExtendPrice then
                 local currentTime = os.time()
-                local newExpiryDate = os.date('%Y-%m-%d %H:%M:%S', currentTime + (days * 86400))
+                local year = Config.PlayYear
+                local newExpiryDate = os.date(year..'-%m-%d %H:%M:%S', currentTime + (days * 86400))
 
                 MySQL.update('UPDATE bcc_documents SET expire_date = ? WHERE charidentifier = ? AND doc_type = ?', {newExpiryDate, charidentifier, docType}, function(affectedRows)
                     if affectedRows > 0 then
