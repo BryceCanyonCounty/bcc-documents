@@ -36,10 +36,16 @@ Locales["de_lang"] = {
 	ShowDocument = 'Zeigen ',
 	PutBack = 'Wegstecken ',
 	NoNearbyPlayer = 'Niemand in der Nähe',
-	PocketFull = 'Du hast dieses Dokument bereits in der Tasche',
+	PocketFull = 'Deine Tasche ist voll', 	-- Korrektur
 	DocumentUpdated = 'Aktualisiertes Dokument',
 	DocumentUpdateFail = 'Aktualisieren des Dokuments fehlgeschlagen',
 	RevokeDocument= 'Dokument widerrufen',
 	YouRevokedDocument = 'Du hast dein Dokument widerrufen',
 	DontHaveToRevoke = 'Du hast kein Dokument, welches du widerrufen kannst',
+	---	New
+	NoJob = "Du bist dazu nicht berechtigt!",
+	GetDocument = "Du hast ein Dokument erhalten: ",
+	GiveDocument = "Du hast ein Dokument ausgestellt: ",
+	TargetAlreadyGotDocument = "Die Person besitzt dieses Dokument bereits!",
+	NoNeedItem = "Dir fehlt folgender Gegenstand: "
 }
