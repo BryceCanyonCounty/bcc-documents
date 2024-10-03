@@ -62,9 +62,11 @@ function OpenMenu()
     documentMainMenu:RegisterElement('line', { slot = "header", style = {} })
 
     for docType, settings in pairs(Config.DocumentTypes) do
-        documentMainMenu:RegisterElement('button', { label = settings.displayName, style = {} }, function()
-            OpenDocumentSubMenu(docType)
-        end)
+        if settings.sellNpc then
+            documentMainMenu:RegisterElement('button', { label = settings.displayName, style = {} }, function()
+                OpenDocumentSubMenu(docType)
+            end)
+        end
     end
 
     documentMainMenu:RegisterElement('bottomline', { value = _U('Licenses'), slot = 'footer', style = {} })
@@ -95,6 +97,14 @@ function OpenDocumentSubMenu(docType)
     end)
 
     if docType ~= 'idcard' then
+        local docConfig = Config.DocumentTypes[docType]
+        documentSubMenu:RegisterElement('button',
+            { label = _U('ExtendExpiry') .. " - $" .. docConfig.extendPrice, style = {} }, function()
+            AddExpiryDate(docType)
+        end)
+    end
+
+    if docType ~= 'weaponlicense' then
         local docConfig = Config.DocumentTypes[docType]
         documentSubMenu:RegisterElement('button',
             { label = _U('ExtendExpiry') .. " - $" .. docConfig.extendPrice, style = {} }, function()
@@ -182,20 +192,36 @@ function ShowDocument(docType, firstname, lastname, nickname, job, age, gender, 
         DocumentPageShow:RegisterElement("html",
             { slot = 'header', value = [[<img width="200px" height="200px" style="margin: 0 auto;" src="]] ..
             (picture or 'default_picture_url_here') .. [[" />]] })
-        DocumentPageShow:RegisterElement("html", {
-            value = [[
-            <div style="text-align: center; margin-top: 10px;">
-                <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('ExpiryDate') .. [[</b> ]] .. (expire_date or 'N/A') .. [[</p>
-            </div>
-        ]]
+        if docType == "idcard" or docType == "weaponlicense" then
+            DocumentPageShow:RegisterElement("html", {
+                value = [[
+                <div style="text-align: center; margin-top: 10px;">
+                    <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
+                </div>
+            ]]
+            })
+        else
+            DocumentPageShow:RegisterElement("html", {
+                value = [[
+                <div style="text-align: center; margin-top: 10px;">
+                    <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
+                    <p><b>]] .. _U('ExpiryDate') .. [[</b> ]] .. (expire_date or 'N/A') .. [[</p>
+                </div>
+            ]]
         })
+        end
 
         MyidOpen = true
         BCCDocumentsMainMenu:Open({ startupPage = DocumentPageShow })
@@ -213,20 +239,36 @@ function OpenDocument(docType, firstname, lastname, nickname, job, age, gender, 
         DocumentPageOpen:RegisterElement("html",
             { slot = 'header', value = [[<img width="200px" height="200px" style="margin: 0 auto;" src="]] ..
             (picture or 'default_picture_url_here') .. [[" />]] })
-        DocumentPageOpen:RegisterElement("html", {
-            value = [[
-            <div style="text-align: center; margin-top: 10px;">
-                <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
-                <p><b>]] .. _U('ExpiryDate') .. [[</b> ]] .. (expire_date or 'N/A') .. [[</p>
-            </div>
-        ]]
-        })
+        if docType == "idcard" or docType == "weaponlicense" then
+                DocumentPageOpen:RegisterElement("html", {
+                    value = [[
+                    <div style="text-align: center; margin-top: 10px;">
+                        <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
+                    </div>
+                ]]
+                })
+            else
+                DocumentPageOpen:RegisterElement("html", {
+                    value = [[
+                    <div style="text-align: center; margin-top: 10px;">
+                        <p><b>]] .. _U('Firstname') .. [[</b> ]] .. (firstname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Lastname') .. [[</b> ]] .. (lastname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Nickname') .. [[</b> ]] .. (nickname or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Job') .. [[</b> ]] .. (job or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Age') .. [[</b> ]] .. (age or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('Gender') .. [[</b> ]] .. (gender or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('CreationDate') .. [[</b> ]] .. (date or 'Unknown') .. [[</p>
+                        <p><b>]] .. _U('ExpiryDate') .. [[</b> ]] .. (expire_date or 'N/A') .. [[</p>
+                    </div>
+                ]]
+                })
+            end
 
         DocumentPageOpen:RegisterElement('button', { label = _U('ShowDocument'), style = { ['border-radius'] = '6px' } },
             function()
