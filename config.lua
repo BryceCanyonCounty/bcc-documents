@@ -1,8 +1,13 @@
 Config = {
-    -- Language settings
-    defaultlang = "en_lang", -- Set Your Language (Current Languages: "en_lang" English, "ro_lang" Romanian, "de_lang" German)
+    -- Default Settings
     devMode = false,
     PlayYear = "1900",
+    -- Language settings
+    defaultlang = "en_lang",    -- Set Your Language (Current Languages: "en_lang" English, "ro_lang" Romanian)
+    -- Command Settings
+    AdminJob = "admin",         -- allow Admin-Jobs to give unbuyable licenses
+    NeedItem = true,            -- Set true or false, if you want to need an item zu execute the commands
+    NeedItemName = "paper",    -- define the item-name set in db
     -- NPC and Blip settings
     DocumentBlips = true,
     DocumentNPC = true,
@@ -36,7 +41,10 @@ Config = {
             reissuePrice = 20,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = '',
+            sellNpc = true, 
+            givenCommand = false,
+            allowJob = "",
         },
         huntinglicence = {
             displayName = "Hunting Licence",
@@ -44,7 +52,10 @@ Config = {
             reissuePrice = 30,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = '',
+            sellNpc = true, 
+            givenCommand = false,
+            allowJob = "",
         },
         mininglicence = {
             displayName = "Mining Licence",
@@ -60,7 +71,10 @@ Config = {
             reissuePrice = 20,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = '',
+            sellNpc = true, 
+            givenCommand = false,
+            allowJob = "",
         },
         goldpanninglicence = {
             displayName = "Gold Panning Licence",
@@ -68,7 +82,21 @@ Config = {
             reissuePrice = 15,
             changePhotoPrice = 10,
             extendPrice = 10,
-            defaultPicture = ''
+            defaultPicture = '',
+            sellNpc = true, 
+            givenCommand = false,
+            allowJob = "",
+        },
+        weaponlicense = {
+            displayName = "Weaponlicense",
+            price = 0,
+            reissuePrice = 0,
+            changePhotoPrice = 0,
+            extendPrice = 0,
+            defaultPicture = 'https://upload.fixitfy.com.tr/images/FIXITFY-lCnMiZnVCH.png',
+            sellNpc = false, 
+            givenCommand = "giveweaponlicense",
+            allowJob = "doj",
         }
     },
     

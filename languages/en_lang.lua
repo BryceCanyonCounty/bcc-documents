@@ -42,4 +42,10 @@ Locales["en_lang"] = {
 	RevokeDocument= 'Revoke Document',
 	YouRevokedDocument = 'You have revoked your document',
 	DontHaveToRevoke = 'You dont have a document to revoke',
+	---	New
+	NoJob = "You are not authorized to do this!",
+	GetDocument = "You have received a document: ",
+	GiveDocument = "You gave a document: ",
+	TargetAlreadyGotDocument = "The person already has this document!",
+	NoNeedItem = "You are missing the following item: "
 }

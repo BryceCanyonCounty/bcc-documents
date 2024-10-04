@@ -89,6 +89,63 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
     end)
 end)
 
+RegisterServerEvent('bcc-documents:server:createDocumentCommand')
+AddEventHandler('bcc-documents:server:createDocumentCommand', function(src, document, job, args)
+    local src = src
+    local Character = VORPcore.getUser(src).getUsedCharacter
+    local targetID = tonumber(args[1])
+    local target = VORPcore.getUser(targetID).getUsedCharacter
+    local targetIdentifier = target.charIdentifier
+    local docType = document
+    local year = Config.PlayYear
+    local date, newExpiryDate = os.date(year..'-%m-%d %H:%M:%S')
+    local picture = Config.DocumentTypes[docType].defaultPicture
+    local itemNeedCount = exports.vorp_inventory:getItemCount(src, nil, Config.NeedItemName)
+    if Config.NeedItem then
+        if itemNeedCount <= 1 then
+            Giveable = false
+            VORPcore.NotifyLeft(src, _U('NoNeedItem') .. Config.NeedItemName, "", Config.Textures.cross[1], Config.Textures.cross[2], 5000)
+            return
+        else
+            Giveable = true
+        end
+    else
+        Giveable = true
+    end
+    if Giveable then
+        if Character.job == job or Character.job == Config.AdminJob then
+            devPrint("Creating document for user:", targetIdentifier, "docType:", docType)
+    
+            MySQL.query('SELECT * FROM bcc_documents WHERE charidentifier = ? AND doc_type = ?', {targetIdentifier, docType}, function(result2)
+                if result2 and result2[1] then
+                    VORPcore.NotifyLeft(src, _U('TargetAlreadyGotDocument'), "", Config.Textures.tick[1], Config.Textures.tick[2], 5000)
+                else
+                    if exports.vorp_inventory:canCarryItems(targetID, 1) and exports.vorp_inventory:canCarryItem(targetID, docType, 1) then
+                        MySQL.insert('INSERT INTO bcc_documents (identifier, charidentifier, doc_type, firstname, lastname, nickname, job, age, gender, date, picture, expire_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                        {
+                            target.identifier, targetIdentifier, docType,
+                            target.firstname, target.lastname, target.nickname,
+                            target.jobLabel, target.age, target.gender,
+                            date, picture, newExpiryDate
+                        }, function()
+                            VORPcore.NotifyLeft(src, _U('GiveDocument') .. docType, "", Config.Textures.tick[1], Config.Textures.tick[2], 5000)
+                            VORPcore.NotifyLeft(targetID, _U('GetDocument') .. docType, "", Config.Textures.tick[1], Config.Textures.tick[2], 5000)
+                            exports.vorp_inventory:addItem(targetID, docType, 1)
+                            if Config.NeedItem then
+                                exports.vorp_inventory:subItem(src, Config.NeedItemName, 1)
+                            end
+                        end)
+                    else
+                        VORPcore.NotifyLeft(src, _U('PocketFull'), "", Config.Textures.cross[1], Config.Textures.cross[2], 5000)
+                    end
+                end
+            end)
+        else
+            VORPcore.NotifyLeft(src, _U('NoJob'), "", Config.Textures.cross[1], Config.Textures.cross[2], 5000)
+        end
+    end
+end)
+
 RegisterServerEvent('bcc-documents:server:reissueDocument')
 AddEventHandler('bcc-documents:server:reissueDocument', function(docType)
     local src = source
@@ -262,3 +319,25 @@ AddEventHandler('bcc-documents:server:updateExpiryDate', function(docType, daysT
         end
     end)
 end)
+--
+Citizen.CreateThread(function()
+    for _, docs in pairs(Config.DocumentTypes) do
+        if docs.givenCommand then
+            local command = docs.givenCommand
+            local document = _
+            local job = docs.allowJob
+            RegisterCommands(command, document, job)
+        end
+    end
+end)
+
+function RegisterCommands(command, document, job)
+    RegisterCommand(command, function(source, args, rawCommand)
+    local src = source
+    --GiveDoc(src, document, job, args)
+    TriggerEvent('bcc-documents:server:createDocumentCommand', src, document, job, args)
+    end)
+    print("--------------------------------------------------------------")
+    print("Command Registered!", command)
+    print("--------------------------------------------------------------")
+end
