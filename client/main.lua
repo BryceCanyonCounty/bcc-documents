@@ -96,15 +96,7 @@ function OpenDocumentSubMenu(docType)
         TriggerEvent('bcc-documents:client:reissueDocument', docType)
     end)
 
-    if docType ~= 'idcard' then
-        local docConfig = Config.DocumentTypes[docType]
-        documentSubMenu:RegisterElement('button',
-            { label = _U('ExtendExpiry') .. " - $" .. docConfig.extendPrice, style = {} }, function()
-            AddExpiryDate(docType)
-        end)
-    end
-
-    if docType ~= 'weaponlicense' then
+    if docType ~= 'idcard' or docType ~= 'weaponlicense' then
         local docConfig = Config.DocumentTypes[docType]
         documentSubMenu:RegisterElement('button',
             { label = _U('ExtendExpiry') .. " - $" .. docConfig.extendPrice, style = {} }, function()
