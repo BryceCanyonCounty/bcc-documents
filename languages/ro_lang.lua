@@ -43,9 +43,10 @@ Locales["ro_lang"] = {
 	YouRevokedDocument = 'Ti-ai anulat documentul',
 	DontHaveToRevoke = 'Nu ai un document de anulat',
 	---	New
-	NoJob = "Nu sunteți autorizat să faceți acest lucru!",
-	GetDocument = "Ați primit un document: ",
+	NoJob = "Nu sunteți autorizat sa faceți acest lucru!",
+	GetDocument = "Ati primit un document: ",
 	GiveDocument = "Ai dat un document: ",
 	TargetAlreadyGotDocument = "Persoana are deja acest document!",
-	NoNeedItem = "Vă lipsește următorul articol: "
+	NoNeedItem = "Va lipseste urmatorul articol: ",
+	checkingYourDoc = " - Verifica documentul dvs"
  }

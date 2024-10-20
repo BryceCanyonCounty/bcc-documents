@@ -7,15 +7,8 @@ local function devPrint(...)
     end
 end
 
--- Function to register a document type as a usable item
-local function registerDocumentType(docType)
-    exports.vorp_inventory:registerUsableItem(docType, function(data)
-        handleDocumentUse(data.source, docType)
-    end)
-end
-
 -- Function to handle the usage of a document
-function handleDocumentUse(src, docType)
+function handleDocumentUse(src, docType, docDisplayName)
     local User = VORPcore.getUser(src)
 
     if User then
@@ -27,12 +20,14 @@ function handleDocumentUse(src, docType)
             MySQL.query('SELECT * FROM `bcc_documents` WHERE charidentifier = ? AND doc_type = ?', {charidentifier, docType}, function(result)
                 if result and #result > 0 then
                     local doc = result[1]
-                    devPrint("Document found:", doc)
+                    devPrint("Document found:", json.encode(doc))  -- Use json.encode to print the table contents
                     TriggerClientEvent('bcc-documents:client:opendocument', src, docType, doc.firstname, doc.lastname, doc.nickname, doc.job, doc.age, doc.gender, doc.date, doc.picture, doc.expire_date)
                 else
                     devPrint("No document found for user:", charidentifier, "docType:", docType)
                     VORPcore.NotifyLeft(src, _U('GotNoDocument'), "", Config.Textures.cross[1], Config.Textures.cross[2], 5000)
                 end
+                -- Close inventory only after event handling
+                exports.vorp_inventory:closeInventory(src)
             end)
         else
             devPrint("Error: Character data not found for user:", src)
@@ -40,12 +35,15 @@ function handleDocumentUse(src, docType)
     else
         devPrint("Error: User not found for source:", src)
     end
-    exports.vorp_inventory:closeInventory(src)
 end
 
--- Iterate over each document type and register it
-for docType, _ in pairs(Config.DocumentTypes) do
-    registerDocumentType(docType)
+-- Iterate over each document type and register it as a usable item
+for docType, docData in pairs(Config.DocumentTypes) do
+    exports.vorp_inventory:registerUsableItem(docType, function(data)
+        local src = data.source
+        exports.vorp_inventory:closeInventory(src)  -- Close inventory on use
+        handleDocumentUse(src, docType, docData.displayName)  -- Pass the display name
+    end)
 end
 
 -- Register other server events
@@ -57,7 +55,8 @@ AddEventHandler('bcc-documents:server:createDocument', function(docType)
     local Money = Character.money
     local price = Config.DocumentTypes[docType].price
     local year = Config.PlayYear
-    local date, newExpiryDate = os.date(year..'-%m-%d %H:%M:%S')
+    local date = os.date(year..'-%m-%d %H:%M:%S')
+    local newExpiryDate = os.date(year..'-%m-%d %H:%M:%S', os.time() + (Config.DocumentTypes[docType].expiryDays * 86400))
     local picture = Config.DocumentTypes[docType].defaultPicture
 
     devPrint("Creating document for user:", charidentifier, "docType:", docType)
@@ -98,7 +97,8 @@ AddEventHandler('bcc-documents:server:createDocumentCommand', function(src, docu
     local targetIdentifier = target.charIdentifier
     local docType = document
     local year = Config.PlayYear
-    local date, newExpiryDate = os.date(year..'-%m-%d %H:%M:%S')
+    local date = os.date(year..'-%m-%d %H:%M:%S')
+    local newExpiryDate = os.date(year..'-%m-%d %H:%M:%S', os.time() + (Config.DocumentTypes[docType].expiryDays * 86400))
     local picture = Config.DocumentTypes[docType].defaultPicture
     local itemNeedCount = exports.vorp_inventory:getItemCount(src, nil, Config.NeedItemName)
     if Config.NeedItem then
@@ -334,10 +334,9 @@ end)
 function RegisterCommands(command, document, job)
     RegisterCommand(command, function(source, args, rawCommand)
     local src = source
-    --GiveDoc(src, document, job, args)
     TriggerEvent('bcc-documents:server:createDocumentCommand', src, document, job, args)
     end)
-    print("--------------------------------------------------------------")
-    print("Command Registered!", command)
-    print("--------------------------------------------------------------")
+    devPrint("--------------------------------------------------------------")
+    devPrint("Command Registered!", command)
+    devPrint("--------------------------------------------------------------")
 end

@@ -47,5 +47,6 @@ Locales["de_lang"] = {
 	GetDocument = "Du hast ein Dokument erhalten: ",
 	GiveDocument = "Du hast ein Dokument ausgestellt: ",
 	TargetAlreadyGotDocument = "Die Person besitzt dieses Dokument bereits!",
-	NoNeedItem = "Dir fehlt folgender Gegenstand: "
+	NoNeedItem = "Dir fehlt folgender Gegenstand: ",
+	checkingYourDoc = " - Checking your document"
 }
